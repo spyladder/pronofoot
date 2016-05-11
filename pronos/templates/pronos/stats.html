@@ -1,0 +1,39 @@
+<h1>{{ cup_name }}</h1>
+<h2>Statistiques :</h2>
+
+<table>
+    <tr>
+        <td>Nombre de buts marqués :</td>
+        <td>{{ nb_goals }}</td>
+    </tr>
+    <tr>
+        <td>Nombre de buts moyen par match :</td>
+        <td>{{ goals_per_match }}</td>
+    </tr>
+    <tr>
+        <td>Matchs nuls :</td>
+        <td>{{ draw_percent }}%</td>
+    </tr>
+    <tr>
+        <td>Matches remportés par l'équipe la mieux classée :</td>
+        <td>{{ matches_won_by_favorite_percent }}%</td>
+    </tr>
+    <tr>
+        <td>Matches perdus par l'équipe la mieux classée :</td>
+        <td>{{ matches_lost_by_favorite_percent }}%</td>
+    </tr>
+</table>
+<table>
+    <tr>
+    <th>Scores</th>
+    <th>Occurences</th>
+    <th>Pourcentage</th>
+    </tr>
+    {% for score, occurs, percent in score_list_percent %}
+    <tr>
+        <td align="center">{{ score }}</td>
+        <td align="center">{{ occurs }}</td>
+        <td align="center">{{ percent }}%</td>
+    </tr>
+    {% endfor %}
+</table>

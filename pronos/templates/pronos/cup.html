@@ -1,0 +1,6 @@
+<h1>{{ cup_name }}</h1>
+<ul>
+    <li><a href="{% url 'pronos:cupTeams' cup_id %}">Equipes</a></li>
+    <li><a href="{% url 'pronos:matches' cup_id %}">Matches</a></li>
+    <li><a href="{% url 'pronos:stats' cup_id %}">Statistiques</a></li>
+</ul>

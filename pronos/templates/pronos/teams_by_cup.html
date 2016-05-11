@@ -1,0 +1,20 @@
+<h1>{{ cup_name }}</h1>
+<h2>Equipes participantes classées selon leurs rangs Fifa du moment :</h2>
+{% if team_list %}
+    <table>
+        <tr>
+            <th>Equipes</th>
+            <th>Rang FIFA</th>
+        </tr>
+        {% for team in team_list %}
+        <tr>
+            <td><a href="{% url 'pronos:team' cup_id team.team.id %}">
+                {{ team.team }}
+            </td>
+            <td  align="center">{{ team.fifa_rank }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <p>Aucune équipe disponible.</p>
+{% endif %}

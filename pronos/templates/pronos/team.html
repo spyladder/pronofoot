@@ -1,0 +1,21 @@
+<h1>{{ cup_name }}</h1>
+<h2>{{ team_name }}</h2>
+
+<h3>Stats de buts :</h3>
+<table>
+    <tr>
+        <td>Marqués :</td>
+        <td>{{ nb_goals_plus }}</td>
+    </tr>
+    <tr>
+        <td>Encaissés :</td>
+        <td>{{ nb_goals_minus }}</td>
+    </tr>
+    <tr>
+        <td>Différence :</td>
+        <td>{{ goals_diff }}</td>
+    </tr>
+</table>
+
+<h3>Calendrier :</h3>
+{% include "pronos/matches_calendar.html" %}

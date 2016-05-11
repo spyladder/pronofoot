@@ -1,0 +1,10 @@
+<h1>Bienvenue sur Pronofoot</h1>
+{% if cup_list %}
+    <ul>
+    {% for cup in cup_list %}
+        <li><a href="{% url 'pronos:cup' cup.id %}">{{ cup.cup_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucune compétition disponible.</p>
+{% endif %}

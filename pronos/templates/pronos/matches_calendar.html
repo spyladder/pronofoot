@@ -1,0 +1,41 @@
+{% if phases %}
+    <table>
+        <tr>
+            {% for phase_name, date_list in phases %}
+            <th>{{ phase_name }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+        {% for phase_name, date_list in phases %}
+            <td valign="top">
+            {% for date, match_list in date_list %}
+            <h4>{{ date }} :</h4>
+            <table>
+                {% for match in match_list %}
+                <tr>
+                    <td align="right">
+                        <a href="{% url 'pronos:team' cup_id match.team_a.id %}">
+                        {{ match.team_a }}
+                    </td>
+                    <td>
+                        {{ match.score_prolong_a|default:0|add:match.score_a }}
+                    </td>
+                    <td>-</td>
+                    <td>
+                        {{ match.score_prolong_b|default:0|add:match.score_b }}
+                    </td>
+                    <td align="left">
+                        <a href="{% url 'pronos:team' cup_id match.team_b.id %}">
+                        {{ match.team_b }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% endfor %}
+            </td>
+        {% endfor %}
+        </tr>
+    </table>
+{% else %}
+    <p>Aucun match disponible.</p>
+{% endif %}
