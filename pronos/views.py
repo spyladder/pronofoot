@@ -243,4 +243,4 @@ def connexion(request):
 
 def deconnexion(request):
     logout(request)
-    return redirect('/pronos/')
+    return redirect('pronos:index')
