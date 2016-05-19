@@ -1,0 +1,17 @@
+<h1>Pronofoot</h1>
+<h2>Connexion</h2>
+
+{% if error %}
+    <p><strong>Utilisateur inconnu ou mauvais de mot de passe.</strong></p>
+{% endif %}
+
+{% if user.is_authenticated %}
+    <p><strong>Vous êtes connecté, {{ user.username }} !</strong></p>
+    <a href="{% url 'pronos:index' %}">Accueil</a>
+{% else %}
+    <form method="post" action=".">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Connexion" />
+    </form>
+{% endif %}

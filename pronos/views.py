@@ -1,9 +1,13 @@
-from django.shortcuts import get_object_or_404, get_list_or_404, render
+from django.shortcuts import get_object_or_404, get_list_or_404, render, redirect
 from django.http import Http404
 from django.http import HttpResponse
 from django.template import loader
-from pronos.models import *
 from django.db.models import Q, F
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.core.urlresolvers import reverse
+from pronos.models import *
+from pronos.forms import *
 
 def index(request):
     cup_list = Cups.objects.order_by('-cup_year')
@@ -192,3 +196,51 @@ def getFormatedMatchList(match_list):
     phases.append((cur_phase, dates))
 
     return phases
+
+
+def register(request):
+    if request.method == 'POST':
+        form = AccountCreationForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            username_already_exists = False
+            created = False
+            user = User.objects.filter(username=username)
+            if user:
+                username_already_exists = True
+                created = False
+            else:
+                user = User.objects.create_user(username, email, password)
+                created = True
+
+    else: # GET
+        form = AccountCreationForm()
+
+    return render(request, 'pronos/register.html', locals())
+
+
+def connexion(request):
+    error = False
+
+    if request.method == 'POST':
+        form = AccountLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request, user)
+            else:
+                error = True
+    else:
+        form = AccountLoginForm()
+
+    return render(request, 'pronos/login.html', locals())
+
+
+def deconnexion(request):
+    logout(request)
+    return redirect('/pronos/')

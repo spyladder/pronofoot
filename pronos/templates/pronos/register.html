@@ -1,0 +1,15 @@
+<h1>Pronofoot</h1>
+<h2>Création de compte</h2>
+{% if created %}
+    <p><strong>Votre compte a bien été créé !</strong></p>
+    <a href="{% url 'pronos:index' %}">Accueil</a>
+{% else %}
+    {% if username_already_exists %}
+        <p><strong>Le pseudo "{{ username }}" est déjà utilisé !</strong></p>
+    {% endif %}
+    <form action="{% url 'pronos:register' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Submit" />
+    </form>
+{% endif %}
