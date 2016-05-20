@@ -5,6 +5,7 @@ from django.template import loader
 from django.db.models import Q, F
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from pronos.models import *
 from pronos.forms import *
@@ -244,3 +245,9 @@ def connexion(request):
 def deconnexion(request):
     logout(request)
     return redirect('pronos:index')
+
+
+@login_required
+def pronostiques(request, cup_id):
+
+    return render(request, 'pronos/pronostiques.html', locals())

@@ -8,7 +8,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
+from django.conf import settings
 
 class Cups(models.Model):
     id = models.SmallIntegerField(primary_key=True)
@@ -85,3 +85,20 @@ class TeamsByCup(models.Model):
 
     class Meta:
         db_table = 'Teams_by_cup'
+
+
+class Pronostics(models.Model):
+    id = models.SmallIntegerField(primary_key=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, db_column='user')
+    match = models.ForeignKey(Matches, db_column='match_id')
+    score_a = models.SmallIntegerField(blank=True, null=True)
+    score_b = models.SmallIntegerField(blank=True, null=True)
+    score_prolong_a = models.SmallIntegerField(blank=True, null=True)
+    score_prolong_b = models.SmallIntegerField(blank=True, null=True)
+    tab_winner = models.CharField(max_length=1, blank=True, null=True)
+
+    def __str__(self):
+        return '{}_{}'.format(self.user, self.match)
+
+    class Meta:
+        db_table = 'Pronostics'
