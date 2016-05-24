@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^(?P<cup_id>[0-9]+)/teams/$', views.cupTeams, name='cupTeams'),
     url(r'^(?P<cup_id>[0-9]+)/teams/(?P<team_id>[0-9]+)$', views.team, name='team'),
     url(r'^(?P<cup_id>[0-9]+)/matches/$', views.matches, name='matches'),
+    url(r'^(?P<cup_id>[0-9]+)/pronos_edit/$', views.pronosEdit, name='pronosEdit'),
     url(r'^(?P<cup_id>[0-9]+)/stats/$', views.stats, name='stats'),
 ]

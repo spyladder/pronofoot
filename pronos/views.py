@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.forms import formset_factory
 from pronos.models import *
 from pronos.forms import *
 import datetime
@@ -253,6 +254,96 @@ def deconnexion(request):
 
 
 @login_required
-def pronostiques(request, cup_id):
+def pronosEdit(request, cup_id):
+    user = request.user
+    cup_name = Cups.objects.get(pk=cup_id)
+    context = {}
 
-    return render(request, 'pronos/pronostiques.html', locals())
+    if request.method == 'POST':
+        PronosticFormSet = formset_factory(PronosticForm)
+        formset = PronosticFormSet(request.POST)
+        # TODO gérer les erreurs
+        print(formset.errors)
+        if formset.is_valid():
+            for form in formset:
+                prono_id = form.cleaned_data['prono']
+                match_id = form.cleaned_data['match']
+                score_a = form.cleaned_data['score_a']
+                score_b = form.cleaned_data['score_b']
+                winner = form.cleaned_data['winner']
+                match = Matches.objects.get(pk=int(match_id))
+                if not prono_id: # New prono to create
+                    Pronostics.objects.create(
+                        user=user,
+                        match=match,
+                        score_a=score_a,
+                        score_b=score_b,
+                        tab_winner=winner
+                    )
+                else: # Existing prono to modify
+                    prono = Pronostics.objects.get(pk=prono_id)
+                    prono.score_a = score_a
+                    prono.score_b = score_b
+                    prono.tab_winner = winner
+                    prono.save()
+
+            context = {
+                'cup_id': cup_id,
+                'cup_name': cup_name,
+                'created': True,
+            }
+        else:
+            context = createPronosticForm(cup_id, cup_name, user)
+        
+    else: # GET
+        context = createPronosticForm(cup_id, cup_name, user)
+
+    print(context)
+    return render(request, 'pronos/pronostics_edit.html', context)
+
+
+def createPronosticForm(cup_id, cup_name, user):
+    no_available_prono = False
+    tomorrow = datetime.date.today() + datetime.timedelta(1)
+    match_list = Matches.objects.filter(
+        cup=cup_id,
+        match_date__gte=tomorrow
+    ).order_by('match_date')
+    if not match_list:
+        no_available_prono = True
+
+    PronosticFormSet = formset_factory(PronosticForm, extra=len(match_list))
+    formset = PronosticFormSet()
+    i = 0
+    for match in match_list:
+        form = formset[i]
+        # We write in the form the id of the match linked to this prono
+        form.initial = {'match': match.id}
+        pronos = Pronostics.objects.filter(user=user, match=match)
+        winner_initial = (
+            ('a', match.team_a),
+            ('b', match.team_b)
+        )
+        # If the prono already exists for this match and this user
+        if pronos and len(pronos) > 0:
+            form.initial['prono'] = pronos[0].id
+            form.initial['score_a'] = pronos[0].score_a
+            form.initial['score_b'] = pronos[0].score_b
+            if pronos[0].tab_winner == 'b':
+                winner_initial = (
+                    ('b', match.team_b),
+                    ('a', match.team_a),
+                )
+
+
+        form.fields['score_a'].label = match.team_a
+        form.fields['score_b'].label = match.team_b
+        form.fields['winner'].widget.choices = winner_initial
+        i += 1
+
+    return {
+        'cup_id': cup_id,
+        'cup_name': cup_name,
+        'no_available_prono': no_available_prono,
+        'formset': formset,
+    }

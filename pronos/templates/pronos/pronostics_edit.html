@@ -1,0 +1,38 @@
+<h1>Pronofoot</h1>
+<h2>{{ cup_name }}</h2>
+{% if created %}
+    <p><strong>Vos pronostiques sont enregistrés.</strong></p>
+    <a href="{% url 'pronos:cup' cup_id %}">Retour</a>
+{% else %}
+    <h3>Matchs à pronostiquer :</h3>
+    {% if no_available_prono %}
+        <p>Pas de pronostique éditable.</p>
+    {% else %}
+        <form action="." method="post">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <table>
+                <tr>
+                <th>Equipe A</th>
+                <th>Score A</th>
+                <th>Score B</th>
+                <th>Equipe B</th>
+                <th>Vainqueur en cas de tirs aux buts</th>
+                </tr>
+                {% for form in formset %}
+                    {{ form.id }}
+                    <tr>
+                        <td align="right">{{ form.score_a.label }}</td>
+                        <td align="right">{{ form.score_a }}</td>
+                        <td align="left">{{ form.score_b }}</td>
+                        <td align="left">{{ form.score_b.label }}</td>
+                        <td align="center">{{ form.winner }}</td>
+                        <td>{{ form.prono }}</td>
+                        <td>{{ form.match }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Soumettre" />
+        </form>
+    {% endif %}
+{% endif %}
