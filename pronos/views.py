@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from pronos.models import *
 from pronos.forms import *
+import datetime
 
 def index(request):
     cup_list = Cups.objects.order_by('-cup_year')
@@ -56,7 +57,10 @@ def matches(request, cup_id):
 
 
 def stats(request, cup_id):
-    match_list = Matches.objects.filter(cup=cup_id)
+    match_list = Matches.objects.filter(
+        cup=cup_id,
+        match_date__lte=datetime.date.today()
+    )
     if not match_list:
         raise Http404("Pas de match disponible.")
     cup_name = match_list[0].cup
@@ -133,7 +137,8 @@ def team(request, cup_id, team_id):
 
     match_list = Matches.objects.filter(
         Q(cup=cup_id),
-        Q(team_a=team_id) | Q(team_b=team_id)
+        Q(team_a=team_id) | Q(team_b=team_id),
+        Q(match_date__lte=datetime.date.today())
     ).order_by('match_date')
 
     if not match_list:
@@ -232,7 +237,7 @@ def connexion(request):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
-            if user:
+            if user and user.is_active:
                 login(request, user)
             else:
                 error = True
