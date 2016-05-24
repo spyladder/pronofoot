@@ -1,5 +1,5 @@
 <h1>Pronofoot</h1>
-<h2>Création de compte</h2>
+<h3>Création de compte</h3>
 {% if created %}
     <p><strong>Votre compte a bien été créé !</strong></p>
     <a href="{% url 'pronos:index' %}">Accueil</a>
@@ -10,6 +10,6 @@
     <form action="{% url 'pronos:register' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Soumettre" />
     </form>
 {% endif %}
