@@ -298,7 +298,6 @@ def pronosEdit(request, cup_id):
     else: # GET
         context = createPronosticForm(cup_id, cup_name, user)
 
-    print(context)
     return render(request, 'pronos/pronostics_edit.html', context)
 
 
