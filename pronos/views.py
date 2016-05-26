@@ -58,10 +58,9 @@ def matches(request, cup_id):
 
 
 def stats(request, cup_id):
-    yesterday = datetime.date.today() - datetime.timedelta(1)
     match_list = Matches.objects.filter(
         cup=cup_id,
-        match_date__lte=yesterday
+        match_date__lt=datetime.date.today()
     )
     if not match_list:
         raise Http404("Pas de match disponible.")
@@ -137,11 +136,10 @@ def team(request, cup_id, team_id):
     team = get_object_or_404(Teams, pk=team_id)
     team_name = team.team_name
 
-    yesterday = datetime.date.today() - datetime.timedelta(1)
     match_list = Matches.objects.filter(
         Q(cup=cup_id),
         Q(team_a=team_id) | Q(team_b=team_id),
-        Q(match_date__lte=yesterday)
+        Q(match_date__lt=datetime.date.today())
     ).order_by('match_date')
 
     if not match_list:
@@ -305,10 +303,9 @@ def pronosEdit(request, cup_id):
 
 def createPronosticForm(cup_id, cup_name, user):
     no_available_prono = False
-    tomorrow = datetime.date.today() + datetime.timedelta(1)
     match_list = Matches.objects.filter(
         cup=cup_id,
-        match_date__gte=tomorrow
+        match_date__gt=datetime.date.today()
     ).order_by('match_date')
     if not match_list:
         no_available_prono = True
