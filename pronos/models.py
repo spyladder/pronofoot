@@ -48,6 +48,28 @@ class Matches(models.Model):
             else:
                 return self.score_b + self.score_prolong_b
 
+    def getWinnerTeam(self):
+        # If it's a match with no prolongation
+        if self.score_prolong_a == None:
+            if self.score_a > self.score_b:
+                return 'a'
+            elif self.score_a < self.score_b:
+                return 'b'
+            else:
+                return 'd' # Draw
+        else: # Match with prolongation
+            # If match ended without penalties
+            if self.score_tab_a == None:
+                if self.score_a + self.score_prolong_a > self.score_b + self.score_prolong_b:
+                    return 'a'
+                else:
+                    return 'b'
+            else: # Match ended with penalties
+                if self.score_tab_a > self.score_tab_b:
+                    return 'a'
+                else:
+                    return 'b'
+
     def __str__(self):
         spa, spb = 0, 0
         if self.score_prolong_a != None:

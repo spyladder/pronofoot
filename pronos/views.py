@@ -345,3 +345,76 @@ def createPronosticForm(cup_id, cup_name, user):
         'no_available_prono': no_available_prono,
         'formset': formset,
     }
+
+
+def pronostics(request, cup_id):
+    cup_name = Cups.objects.get(pk=cup_id)
+    context = {
+        'cup_id': cup_id,
+        'cup_name': cup_name,
+    }
+
+    user_list = []
+    match_list = []
+    matches = Matches.objects.filter(
+        cup=cup_id,
+        match_date__lt=datetime.date.today()
+    ).order_by('match_date')
+    pronos = Pronostics.objects.filter(match__cup=cup_id).order_by('user')
+
+    # user_list filling
+    for prono in pronos:
+        if len(user_list) == 0 or user_list[-1] != prono.user.username:
+            user_list.append(prono.user.username)
+
+    # match_list filling
+    for match in matches:
+        match_pronos = pronos.filter(match=match)
+        pronos_a_list = []
+        pronos_b_list = []
+        i = 0
+        for prono in match_pronos:
+            # Normally, there is one prono by user, but if one user missed a prono,
+            # we have to create an empty prono for this user
+            EMPTY_PRONO = {'score': '?', 'win': '?'}
+            while prono.user.username != user_list[i]:
+                pronos_a_list.append(EMPTY_PRONO)
+                pronos_b_list.append(EMPTY_PRONO)
+                i += 1
+
+            win_val_a = 'x'
+            win_val_b = ''
+            if prono.tab_winner == 'b':
+                win_val_a = ''
+                win_val_b = 'x'
+            pronos_a_list.append({'score': prono.score_a, 'win': win_val_a})
+            pronos_b_list.append({'score': prono.score_b, 'win': win_val_b})
+            i += 1
+
+        match_winner = match.getWinnerTeam()
+        win_val_a = ''
+        win_val_b = ''
+        if match_winner == 'a':
+            win_val_a = 'x'
+            win_val_b = ''
+        elif match_winner == 'b':
+            win_val_a = ''
+            win_val_b = 'x'
+        match_list.append(
+            {
+                'date': match.match_date,
+                'team_a': match.team_a.team_name,
+                'team_b': match.team_b.team_name,
+                'score_a': match.score_a,
+                'score_b': match.score_b,
+                'win_a': win_val_a,
+                'win_b': win_val_b,
+                'pronos_a': pronos_a_list,
+                'pronos_b': pronos_b_list,
+            }
+        )
+
+    context['user_list'] = user_list
+    context['match_list'] = match_list
+
+    return render(request, 'pronos/pronostics.html', context)

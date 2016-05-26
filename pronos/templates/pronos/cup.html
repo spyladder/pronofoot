@@ -2,7 +2,8 @@
 <h2>{{ cup_name }}</h2>
 <ul>
     <li><a href="{% url 'pronos:cupTeams' cup_id %}">Equipes</a></li>
-    <li><a href="{% url 'pronos:matches' cup_id %}">Matches</a></li>
+    <li><a href="{% url 'pronos:matches' cup_id %}">Calendrier et résultats des matches</a></li>
     <li><a href="{% url 'pronos:pronosEdit' cup_id %}">Editer mes pronostiques</a></li>
+    <li><a href="{% url 'pronos:pronostics' cup_id %}">Consulter l'ensemble des pronostiques</a></li>
     <li><a href="{% url 'pronos:stats' cup_id %}">Statistiques</a></li>
 </ul>

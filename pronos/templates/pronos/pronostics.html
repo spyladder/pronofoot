@@ -1,0 +1,37 @@
+<h1>Pronofoot</h1>
+<h2>{{ cup_name }}</h2>
+<h3>Tableau récapitulatif des pronostiques :</h3>
+
+
+<table border="1px solid black">
+    <tr>
+        <th>Date</th>
+        <th>Match</th>
+        <th>Score</th>
+        <th>V</th>
+        {% for user_name in user_list %}
+            <th colspan="2">{{ user_name }}</th>
+        {% endfor %}
+    </tr>
+    {% for match in match_list %}
+        <tr>
+            <td rowspan="2">{{ match.date }}</td>
+            <td>{{ match.team_a }}</td>
+            <td>{{ match.score_a }}</td>
+            <td>{{ match.win_a }}</td>
+            {% for prono in match.pronos_a %}
+                <td>{{ prono.score }}</td>
+                <td>{{ prono.win }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td>{{ match.team_b }}</td>
+            <td>{{ match.score_b }}</td>
+            <td>{{ match.win_b }}</td>
+            {% for prono in match.pronos_b %}
+                <td>{{ prono.score }}</td>
+                <td>{{ prono.win }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
