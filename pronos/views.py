@@ -12,6 +12,12 @@ from pronos.models import *
 from pronos.forms import *
 import datetime
 
+U_COLORS = {
+    'light': ['#8bf', '#8fb', '#b8f', '#f8b', '#bf8', '#fb8'],
+    'dark':  ['#69d', '#6d9', '#96d', '#d69', '#9d6', '#d96']
+}
+GREY = { 'light': '#eee', 'dark': '#ccc'}
+
 def index(request):
     cup_list = Cups.objects.order_by('-cup_year')
     context = {
@@ -363,11 +369,19 @@ def pronostics(request, cup_id):
     pronos = Pronostics.objects.filter(match__cup=cup_id).order_by('user')
 
     # user_list filling
+    i = 0
     for prono in pronos:
-        if len(user_list) == 0 or user_list[-1] != prono.user.username:
-            user_list.append(prono.user.username)
+        if len(user_list) == 0 or user_list[-1]['name'] != prono.user.username:
+            user_list.append(
+                {
+                    'name': prono.user.username,
+                    'color': U_COLORS['dark'][i]
+                }
+            )
+            i += 1
 
     # match_list filling
+    color_type = 'light'
     for match in matches:
         match_pronos = pronos.filter(match=match)
         pronos_a_list = []
@@ -376,10 +390,9 @@ def pronostics(request, cup_id):
         for prono in match_pronos:
             # Normally, there is one prono by user, but if one user missed a prono,
             # we have to create an empty prono for this user
-            EMPTY_PRONO = {'score': '?', 'win': '?'}
-            while prono.user.username != user_list[i]:
-                pronos_a_list.append(EMPTY_PRONO)
-                pronos_b_list.append(EMPTY_PRONO)
+            while prono.user.username != user_list[i]['name']:
+                pronos_a_list.append({'score': '?', 'win': '?', 'color': U_COLORS[color_type][i]})
+                pronos_b_list.append({'score': '?', 'win': '?', 'color': U_COLORS[color_type][i]})
                 i += 1
 
             win_val_a = 'x'
@@ -387,8 +400,12 @@ def pronostics(request, cup_id):
             if prono.tab_winner == 'b':
                 win_val_a = ''
                 win_val_b = 'x'
-            pronos_a_list.append({'score': prono.score_a, 'win': win_val_a})
-            pronos_b_list.append({'score': prono.score_b, 'win': win_val_b})
+            pronos_a_list.append({
+                'score': prono.score_a, 'win': win_val_a, 'color': U_COLORS[color_type][i]
+            })
+            pronos_b_list.append({
+                'score': prono.score_b, 'win': win_val_b, 'color': U_COLORS[color_type][i]
+            })
             i += 1
 
         match_winner = match.getWinnerTeam()
@@ -411,8 +428,13 @@ def pronostics(request, cup_id):
                 'win_b': win_val_b,
                 'pronos_a': pronos_a_list,
                 'pronos_b': pronos_b_list,
+                'color': GREY[color_type],
             }
         )
+        if color_type == 'dark':
+            color_type = 'light'
+        else:
+            color_type = 'dark'
 
     context['user_list'] = user_list
     context['match_list'] = match_list

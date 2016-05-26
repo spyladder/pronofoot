@@ -3,34 +3,34 @@
 <h3>Tableau récapitulatif des pronostiques :</h3>
 
 
-<table border="1px solid black">
-    <tr>
+<table border="1">
+    <tr bgcolor="#888">
         <th>Date</th>
         <th>Match</th>
         <th>Score</th>
         <th>V</th>
-        {% for user_name in user_list %}
-            <th colspan="2">{{ user_name }}</th>
+        {% for user in user_list %}
+            <th colspan="2" bgcolor={{ user.color }}>{{ user.name }}</th>
         {% endfor %}
     </tr>
     {% for match in match_list %}
-        <tr>
+        <tr bgcolor={{ match.color }}>
             <td rowspan="2">{{ match.date }}</td>
             <td>{{ match.team_a }}</td>
             <td>{{ match.score_a }}</td>
             <td>{{ match.win_a }}</td>
             {% for prono in match.pronos_a %}
-                <td>{{ prono.score }}</td>
-                <td>{{ prono.win }}</td>
+                <td bgcolor={{ prono.color }}>{{ prono.score }}</td>
+                <td bgcolor={{ prono.color }}>{{ prono.win }}</td>
             {% endfor %}
         </tr>
-        <tr>
+        <tr bgcolor={{ match.color }}>
             <td>{{ match.team_b }}</td>
             <td>{{ match.score_b }}</td>
             <td>{{ match.win_b }}</td>
             {% for prono in match.pronos_b %}
-                <td>{{ prono.score }}</td>
-                <td>{{ prono.win }}</td>
+                <td bgcolor={{ prono.color }}>{{ prono.score }}</td>
+                <td bgcolor={{ prono.color }}>{{ prono.win }}</td>
             {% endfor %}
         </tr>
     {% endfor %}
