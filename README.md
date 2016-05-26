@@ -1,3 +1,3 @@
 # pronofoot
-Web app to organize prognostic contests on soccer events
+Web app to organize pronostic contests on football (soccer) events.
 
