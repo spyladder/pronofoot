@@ -76,10 +76,9 @@ class Matches(models.Model):
             spa = self.score_prolong_a
         if self.score_prolong_b != None:
             spb = self.score_prolong_b
-        return (str(self.match_date) + '_' + str(self.phase) + '_'
-              + str(self.team_a) + '_' + str(self.score_a + spa) + '-'
-              + str(self.score_b + spb) + '_' + str(self.team_b)
-            )
+        return '{}_{}_{}_{}-{}_{}'.format(
+            self.match_date, self.phase, self.team_a, self.score_a + spa,
+            self.score_b + spb, self.team_b)
 
     class Meta:
         db_table = 'Matches'
@@ -103,7 +102,7 @@ class TeamsByCup(models.Model):
     fifa_rank = models.SmallIntegerField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.team) + '_' + str(self.cup) + '_' + str(self.fifa_rank)
+        return '{}_{}_{}'.format(self.team, self.cup, self.fifa_rank)
 
     class Meta:
         db_table = 'Teams_by_cup'
