@@ -10,7 +10,7 @@
         <th>Score</th>
         <th>V</th>
         {% for user in user_list %}
-            <th colspan="2" bgcolor={{ user.color }}>{{ user.name }}</th>
+            <th colspan="3" bgcolor={{ user.color }}>{{ user.name }}</th>
         {% endfor %}
     </tr>
     {% for match in match_list %}
@@ -22,6 +22,7 @@
             {% for prono in match.pronos_a %}
                 <td bgcolor={{ prono.color }}>{{ prono.score }}</td>
                 <td bgcolor={{ prono.color }}>{{ prono.win }}</td>
+                <td rowspan="2" bgcolor={{ prono.color }}>{{ prono.points }}</td>
             {% endfor %}
         </tr>
         <tr bgcolor={{ match.color }}>

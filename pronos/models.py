@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.conf import settings
+import datetime
 
 class Cups(models.Model):
     id = models.SmallIntegerField(primary_key=True)
@@ -117,6 +118,45 @@ class Pronostics(models.Model):
     score_prolong_a = models.SmallIntegerField(blank=True, null=True)
     score_prolong_b = models.SmallIntegerField(blank=True, null=True)
     tab_winner = models.CharField(max_length=1, blank=True, null=True)
+
+    def getScore(self):
+        POINTS_1N2 = {
+            'group': 5, # Points if good winner found for a group match,
+            'final': 10, # Points if good winner found for a match in final phase
+        }
+        POINTS_1_SCORE = 3 # Points if the number of goals of only one team is good
+        POINTS_2_SCORES = 11 # Points if the number of goals of both teams is good
+
+        if self.match.match_date < datetime.date.today():
+            score = 0
+            match_phase = 'group'
+            if self.match.phase != 'Phase de poules':
+                match_phase = 'final'
+
+            match_full_score_a = self.match.getFullScore('a')
+            match_full_score_b = self.match.getFullScore('b')
+            
+            same_a = self.score_a == match_full_score_a
+            same_b = self.score_b == match_full_score_b
+            if same_a and same_b:
+                score += POINTS_2_SCORES
+            elif same_a or same_b:
+                score += POINTS_1_SCORE
+
+            match_winner = self.match.getWinnerTeam()
+            ended_with_penalties = self.match.score_tab_a != None
+            if ended_with_penalties and match_winner == self.tab_winner:
+                score += POINTS_1N2[match_phase]
+            elif(self.score_a > self.score_b and match_winner == 'a' or
+                 self.score_a < self.score_b and match_winner == 'b' or
+                 self.score_a == self.score_b and match_winner == 'd'):
+
+                score += POINTS_1N2[match_phase]
+
+            return score
+
+        else:
+            return 0
 
     def __str__(self):
         return '{}_{}'.format(self.user, self.match)

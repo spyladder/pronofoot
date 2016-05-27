@@ -391,8 +391,10 @@ def pronostics(request, cup_id):
             # Normally, there is one prono by user, but if one user missed a prono,
             # we have to create an empty prono for this user
             while prono.user.username != user_list[i]['name']:
-                pronos_a_list.append({'score': '?', 'win': '?', 'color': U_COLORS[color_type][i]})
-                pronos_b_list.append({'score': '?', 'win': '?', 'color': U_COLORS[color_type][i]})
+                pronos_a_list.append({
+                    'score': '?', 'win': '?', 'points': 0, 'color': U_COLORS[color_type][i]})
+                pronos_b_list.append({
+                    'score': '?', 'win': '?', 'color': U_COLORS[color_type][i]})
                 i += 1
 
             win_val_a = 'x'
@@ -401,7 +403,10 @@ def pronostics(request, cup_id):
                 win_val_a = ''
                 win_val_b = 'x'
             pronos_a_list.append({
-                'score': prono.score_a, 'win': win_val_a, 'color': U_COLORS[color_type][i]
+                'score': prono.score_a,
+                'win': win_val_a,
+                'points': prono.getScore(),
+                'color': U_COLORS[color_type][i]
             })
             pronos_b_list.append({
                 'score': prono.score_b, 'win': win_val_b, 'color': U_COLORS[color_type][i]
