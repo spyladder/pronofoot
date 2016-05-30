@@ -119,6 +119,36 @@ class Pronostics(models.Model):
     score_prolong_b = models.SmallIntegerField(blank=True, null=True)
     tab_winner = models.CharField(max_length=1, blank=True, null=True)
 
+    def isGood1N2(self):
+        match_winner = self.match.getWinnerTeam()
+        ended_with_penalties = self.match.score_tab_a != None
+        if ended_with_penalties and match_winner == self.tab_winner:
+            return True
+        elif(self.score_a > self.score_b and match_winner == 'a' or
+             self.score_a < self.score_b and match_winner == 'b' or
+             self.score_a == self.score_b and match_winner == 'd'):
+
+            return True
+        else:
+            return False
+
+    def is2ScoresGood(self):
+        match_full_score_a = self.match.getFullScore('a')
+        match_full_score_b = self.match.getFullScore('b')
+        if self.score_a == match_full_score_a and self.score_b == match_full_score_b:
+            return True
+        else:
+            return False
+
+    def is1ScoreGood(self):
+        match_full_score_a = self.match.getFullScore('a')
+        match_full_score_b = self.match.getFullScore('b')
+        if (self.score_a == match_full_score_a and self.score_b != match_full_score_b or
+            self.score_a != match_full_score_a and self.score_b == match_full_score_b):
+            return True
+        else:
+            return False
+
     def getScore(self):
         POINTS_1N2 = {
             'group': 5, # Points if good winner found for a group match,
@@ -133,25 +163,13 @@ class Pronostics(models.Model):
             if self.match.phase != 'Phase de poules':
                 match_phase = 'final'
 
-            match_full_score_a = self.match.getFullScore('a')
-            match_full_score_b = self.match.getFullScore('b')
-            
-            same_a = self.score_a == match_full_score_a
-            same_b = self.score_b == match_full_score_b
-            if same_a and same_b:
+            if self.isGood1N2():
+                score += POINTS_1N2[match_phase]
+
+            if self.is2ScoresGood():
                 score += POINTS_2_SCORES
-            elif same_a or same_b:
+            elif self.is1ScoreGood():
                 score += POINTS_1_SCORE
-
-            match_winner = self.match.getWinnerTeam()
-            ended_with_penalties = self.match.score_tab_a != None
-            if ended_with_penalties and match_winner == self.tab_winner:
-                score += POINTS_1N2[match_phase]
-            elif(self.score_a > self.score_b and match_winner == 'a' or
-                 self.score_a < self.score_b and match_winner == 'b' or
-                 self.score_a == self.score_b and match_winner == 'd'):
-
-                score += POINTS_1N2[match_phase]
 
             return score
 

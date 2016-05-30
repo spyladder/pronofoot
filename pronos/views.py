@@ -445,3 +445,85 @@ def pronostics(request, cup_id):
     context['match_list'] = match_list
 
     return render(request, 'pronos/pronostics.html', context)
+
+
+def rankings(request, cup_id):
+    cup_name = Cups.objects.get(pk=cup_id)
+    context = {
+        'cup_id': cup_id,
+        'cup_name': cup_name,
+    }
+
+    general_rank_list = []
+    good_1N2_rank_list = []
+    good_score_rank_list = []
+    pronos = Pronostics.objects.filter(match__cup=cup_id).order_by('user')
+
+    current_username = ""
+    current_score = 0
+    current_nb_good_1N2 = 0
+    current_nb_good_2_scores = 0
+    current_nb_good_1_score = 0
+    current_user_nb_pronos = 0
+    for prono in pronos:
+        if current_username == "":
+            current_username = prono.user.username
+            current_score = prono.getScore()
+            if prono.isGood1N2():
+                current_nb_good_1N2 = 1
+
+            if prono.is2ScoresGood():
+                current_nb_good_2_scores = 1
+            elif prono.is1ScoreGood():
+                current_nb_good_1_score = 1
+        elif current_username == prono.user.username:
+            current_score += prono.getScore()
+            if prono.isGood1N2():
+                current_nb_good_1N2 += 1
+
+            if prono.is2ScoresGood():
+                current_nb_good_2_scores += 1
+            elif prono.is1ScoreGood():
+                current_nb_good_1_score += 1
+        else:
+            general_rank_list.append((current_username, current_score))
+
+            nb_pronos_percent = 100 * current_nb_good_1N2 / current_user_nb_pronos
+            good_1N2_rank_list.append((current_username, current_nb_good_1N2, nb_pronos_percent))
+
+            good_score_rank_list.append(
+                (current_username, current_nb_good_2_scores, current_nb_good_1_score))
+
+            current_username = prono.user.username
+            current_score = prono.getScore()
+            current_user_nb_pronos = 0
+            current_nb_good_1N2 = 0
+            current_nb_good_2_scores = 0
+            current_nb_good_1_score = 0
+            if prono.isGood1N2():
+                current_nb_good_1N2 = 1
+
+            if prono.is2ScoresGood():
+                current_nb_good_2_scores = 1
+            elif prono.is1ScoreGood():
+                current_nb_good_1_score = 1
+
+        current_user_nb_pronos += 1
+
+    general_rank_list.append((current_username, current_score))
+
+    nb_pronos_percent = 100 * current_nb_good_1N2 / current_user_nb_pronos
+    good_1N2_rank_list.append((current_username, current_nb_good_1N2, nb_pronos_percent))
+
+    good_score_rank_list.append(
+        (current_username, current_nb_good_2_scores, current_nb_good_1_score))
+
+    general_rank_list.sort(key=lambda col: col[1], reverse=True)
+    good_1N2_rank_list.sort(key=lambda col: col[1], reverse=True)
+    good_score_rank_list.sort(key=lambda cols: cols[1]*1000+cols[2], reverse=True)
+
+    context['general_rank_list'] = general_rank_list
+    context['good_1N2_rank_list'] = good_1N2_rank_list
+    context['good_score_rank_list'] = good_score_rank_list
+
+    return render(request, 'pronos/rankings.html', context)

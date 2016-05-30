@@ -1,0 +1,60 @@
+<html>
+<head>
+<style text/css>
+    table.inlineTable{
+        display:inline;
+    }
+</style>
+</head>
+<body>
+<h1>Pronofoot</h1>
+<h2>{{ cup_name }}</h2>
+<h3>Classement du concours de pronostiques :</h3>
+
+<table border="1" class=inlineTable>
+    <tr>
+        <th>Rang</th>
+        <th>Participant</th>
+        <th>Total</th>
+    </tr>
+    {% for user, points in general_rank_list %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user }}</td>
+            <td>{{ points }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<table border="1" class=inlineTable>
+    <tr>
+        <th>Rang</th>
+        <th>Participant</th>
+        <th>Bon 1N2</th>
+        <th>% bon 1N2</th>
+    </tr>
+    {% for user, points, percent in good_1N2_rank_list %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user }}</td>
+            <td>{{ points }}</td>
+            <td>{{ percent }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<table border="1" class=inlineTable>
+    <tr>
+        <th>Rang</th>
+        <th>Participant</th>
+        <th>Bon score (2 éq.)</th>
+        <th>Bon score (1 éq.)</th>
+    </tr>
+    {% for user, points2, points1 in good_score_rank_list %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user }}</td>
+            <td>{{ points2 }}</td>
+            <td>{{ points1 }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
