@@ -454,11 +454,49 @@ def rankings(request, cup_id):
         'cup_name': cup_name,
     }
 
+    (general_rank_list,
+        good_1N2_rank_list,
+        good_score_rank_list) = getRankingsLists(cup_id, None)
+    (groups_rank_list,
+        groups_good_1N2_rank_list,
+        groups_good_score_rank_list) = getRankingsLists(cup_id, 'Phase de poules')
+    (final_rank_list,
+        final_good_1N2_rank_list,
+        final_good_score_rank_list) = getRankingsLists(cup_id, 'Phase de poules', filter='exclude')
+
+    context['general_rank_list'] = general_rank_list
+    context['good_1N2_rank_list'] = good_1N2_rank_list
+    context['good_score_rank_list'] = good_score_rank_list
+    context['groups_rank_list'] = groups_rank_list
+    context['groups_good_1N2_rank_list'] = groups_good_1N2_rank_list
+    context['groups_good_score_rank_list'] = groups_good_score_rank_list
+    context['final_rank_list'] = final_rank_list
+    context['final_good_1N2_rank_list'] = final_good_1N2_rank_list
+    context['final_good_score_rank_list'] = final_good_score_rank_list
+
+    return render(request, 'pronos/rankings.html', context)
+
+def getRankingsLists(cup_id, phase, filter='include'):
     general_rank_list = []
     good_1N2_rank_list = []
     good_score_rank_list = []
-    pronos = Pronostics.objects.filter(match__cup=cup_id).order_by('user')
+    pronos = None
+    if not phase:
+        pronos = Pronostics.objects.filter(match__cup=cup_id).order_by('user')
+    elif filter == 'include':
+        pronos = Pronostics.objects.filter(
+            match__cup=cup_id, match__phase=phase
+        ).order_by('user')
+    else:
+        pronos = Pronostics.objects.filter(
+            match__cup=cup_id
+        ).exclude(
+            match__phase=phase
+        ).order_by('user')
 
+    if len(pronos) == 0:
+        return (None, None, None)
+        
     current_values = {
         'username': "",
         'score': 0,
@@ -516,8 +554,4 @@ def rankings(request, cup_id):
     good_1N2_rank_list.sort(key=lambda col: col[1], reverse=True)
     good_score_rank_list.sort(key=lambda cols: cols[1]*1000+cols[2], reverse=True)
 
-    context['general_rank_list'] = general_rank_list
-    context['good_1N2_rank_list'] = good_1N2_rank_list
-    context['good_score_rank_list'] = good_score_rank_list
-
-    return render(request, 'pronos/rankings.html', context)
+    return (general_rank_list, good_1N2_rank_list, good_score_rank_list)
