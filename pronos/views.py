@@ -442,6 +442,8 @@ def pronostics(request, cup_id):
             color_type = 'dark'
 
     context['user_list'] = user_list
+    # Used to align columns of the fixed titles line with others
+    context['nb_cols'] = len(user_list) * 3 + 3 
     context['match_list'] = match_list
 
     return render(request, 'pronos/pronostics.html', context)
@@ -496,7 +498,7 @@ def getRankingsLists(cup_id, phase, filter='include'):
 
     if len(pronos) == 0:
         return (None, None, None)
-        
+
     current_values = {
         'username': "",
         'score': 0,
