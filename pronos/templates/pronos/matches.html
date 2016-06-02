@@ -1,5 +1,21 @@
-<h1>Pronofoot</h1>
-<h2>{{ cup_name }}</h2>
-<h3>Calendrier des matchs :</h3>
-
-{% include "pronos/matches_calendar.html" %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'pronos/style.css' %}" />
+        <title>Pronofoot</title>
+    </head>
+    <body>
+        <div id="main_wrapper">
+            <header>
+                {% include "pronos/header.html" %}
+            </header>
+            {% include "pronos/menu.html" %}
+            <section>
+                <h1>Calendrier des matchs :</h1>
+                {% include "pronos/matches_calendar.html" %}
+            </section>
+        </div>
+    </body>
+</html>

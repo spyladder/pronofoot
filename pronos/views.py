@@ -127,6 +127,7 @@ def stats(request, cup_id):
     matches_lost_by_favorite_percent = 100 - matches_won_by_favorite_percent - draw_percent
 
     context = {
+        'cup_id': cup_id,
         'cup_name': cup_name,
         'nb_goals': nb_goals,
         'goals_per_match': goals_per_match,

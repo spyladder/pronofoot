@@ -1,17 +1,33 @@
-<h1>Pronofoot</h1>
-<h3>Connexion</h3>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'pronos/style.css' %}" />
+        <title>Pronofoot</title>
+    </head>
+    <body>
+        <div id="main_wrapper">
+            <header>
+                {% include "pronos/header.html" %}
+            </header>
+            <section>
+                <h1>Connexion</h1>
+                {% if error %}
+                    <p><strong>Utilisateur inconnu ou mauvais de mot de passe.</strong></p>
+                {% endif %}
 
-{% if error %}
-    <p><strong>Utilisateur inconnu ou mauvais de mot de passe.</strong></p>
-{% endif %}
-
-{% if user.is_authenticated %}
-    <p><strong>Vous êtes connecté, {{ user.username }} !</strong></p>
-    <a href="{% url 'pronos:index' %}">Accueil</a>
-{% else %}
-    <form method="post" action=".">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Connexion" />
-    </form>
-{% endif %}
+                {% if user.is_authenticated %}
+                    <p><strong>Vous êtes connecté, {{ user.username }} !</strong></p>
+                    <a href="{% url 'pronos:index' %}">Accueil</a>
+                {% else %}
+                    <form method="post" action=".">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="Connexion" />
+                    </form>
+                {% endif %}
+            </section>
+        </div>
+    </body>
+</html>

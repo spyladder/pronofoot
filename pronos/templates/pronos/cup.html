@@ -1,10 +1,29 @@
-<h1>Pronofoot</h1>
-<h2>{{ cup_name }}</h2>
-<ul>
-    <li><a href="{% url 'pronos:cupTeams' cup_id %}">Equipes</a></li>
-    <li><a href="{% url 'pronos:matches' cup_id %}">Calendrier et résultats des matches</a></li>
-    <li><a href="{% url 'pronos:pronosEdit' cup_id %}">Editer mes pronostiques</a></li>
-    <li><a href="{% url 'pronos:pronostics' cup_id %}">Consulter l'ensemble des pronostiques</a></li>
-    <li><a href="{% url 'pronos:rankings' cup_id %}">Classements des participants</a></li>
-    <li><a href="{% url 'pronos:stats' cup_id %}">Statistiques</a></li>
-</ul>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'pronos/style.css' %}" />
+        <title>Pronofoot</title>
+    </head>
+    <body>
+        <div id="main_wrapper">
+            <header>
+                {% include "pronos/header.html" %}
+            </header>
+            {% include "pronos/menu.html" %}
+            <section>
+                <div id="cup_content">
+                    <ul>
+                        <li><a href="{% url 'pronos:cupTeams' cup_id %}">Equipes</a></li>
+                        <li><a href="{% url 'pronos:matches' cup_id %}">Calendrier et résultats des matches</a></li>
+                        <li><a href="{% url 'pronos:pronosEdit' cup_id %}">Editer mes pronostiques</a></li>
+                        <li><a href="{% url 'pronos:pronostics' cup_id %}">Consulter l'ensemble des pronostiques</a></li>
+                        <li><a href="{% url 'pronos:rankings' cup_id %}">Classements des participants</a></li>
+                        <li><a href="{% url 'pronos:stats' cup_id %}">Statistiques</a></li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+    </body>
+</html>

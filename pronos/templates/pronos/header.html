@@ -1,0 +1,19 @@
+<div id="main_title">
+    <div id="logo">
+        {% load staticfiles %}
+        <img src="{% static 'pronos/logo.png' %}" alt="Logo" />
+        <h1>Pronofoot</h1>    
+    </div>
+</div>
+<nav>
+    <a href="{% url 'pronos:index' %}">Accueil</a>
+    <span> | </span>
+    {% if user.is_authenticated %}
+        <span>Connecté en tant que {{ user.username }},</span>
+        <a href="{% url 'pronos:deconnexion' %}">Déconnection</a>
+    {% else %}
+        <a href="{% url 'pronos:register' %}">Inscription</a>
+        <span> / </span>
+        <a href="{% url 'pronos:connexion' %}">Connection</a>
+    {% endif %}
+</nav>                

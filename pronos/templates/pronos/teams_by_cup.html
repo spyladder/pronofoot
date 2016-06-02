@@ -1,21 +1,41 @@
-<h1>Pronofoot</h1>
-<h2>{{ cup_name }}</h2>
-<h3>Equipes participantes classées selon leurs rangs Fifa du moment :</h3>
-{% if team_list %}
-    <table>
-        <tr>
-            <th>Equipes</th>
-            <th>Rang FIFA</th>
-        </tr>
-        {% for team in team_list %}
-        <tr>
-            <td><a href="{% url 'pronos:team' cup_id team.team.id %}">
-                {{ team.team }}
-            </td>
-            <td  align="center">{{ team.fifa_rank }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-{% else %}
-    <p>Aucune équipe disponible.</p>
-{% endif %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'pronos/style.css' %}" />
+        <title>Pronofoot</title>
+    </head>
+    <body>
+        <div id="main_wrapper">
+            <header>
+                {% include "pronos/header.html" %}
+            </header>
+            {% include "pronos/menu.html" %}
+            <section>
+                <h1>Equipes participantes classées selon leur rang Fifa du moment :</h1>
+                {% if team_list %}
+                    <div class="v_scrolling">
+                        <table>
+                            <tr>
+                                <th>Equipes</th>
+                                <th>Rang FIFA</th>
+                            </tr>
+                            {% for team in team_list %}
+                            <tr>
+                                <td><a href="{% url 'pronos:team' cup_id team.team.id %}">
+                                        {{ team.team }}
+                                    </a>
+                                </td>
+                                <td  align="center">{{ team.fifa_rank }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% else %}
+                    <p>Aucune équipe disponible.</p>
+                {% endif %}
+            </section>
+        </div>
+    </body>
+</html>
