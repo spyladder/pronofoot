@@ -98,10 +98,13 @@ def stats(request, cup_id):
         if score_a == score_b:
             nb_draws += 1
 
-        rank_a = TeamsByCup.objects.filter(team=match.team_a, cup=match.cup)[0].fifa_rank
-        rank_b = TeamsByCup.objects.filter(team=match.team_b, cup=match.cup)[0].fifa_rank
-        if rank_a < rank_b and score_a > score_b or rank_a > rank_b and score_a < score_b:
-            nb_matches_won_by_favorite += 1
+        team_a = TeamsByCup.objects.filter(team=match.team_a, cup=match.cup)
+        team_b = TeamsByCup.objects.filter(team=match.team_b, cup=match.cup)
+        if len(team_a) > 0 and len(team_b) > 0:
+            rank_a = team_a[0].fifa_rank
+            rank_b = team_b[0].fifa_rank
+            if rank_a < rank_b and score_a > score_b or rank_a > rank_b and score_a < score_b:
+                nb_matches_won_by_favorite += 1
 
     nb_matches_total = len(match_list)
     goals_per_match = nb_goals / nb_matches_total
@@ -547,3 +550,13 @@ def getRankingsLists(cup_id, phase, filter='include'):
     good_score_rank_list.sort(key=lambda cols: cols[1]*1000+cols[2], reverse=True)
 
     return (general_rank_list, good_1N2_rank_list, good_score_rank_list)
+
+def graph(request, cup_id):
+    cup_name = Cups.objects.get(pk=cup_id)
+    context = {
+        'cup_id': cup_id,
+        'cup_name': cup_name,
+    }
+
+
+    return render(request, 'pronos/graph.html', context)
