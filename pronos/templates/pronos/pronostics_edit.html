@@ -14,12 +14,12 @@
             {% include "pronos/menu.html" %}
             <section>
                 {% if created %}
-                    <p><strong>Vos pronostiques sont enregistrés.</strong></p>
+                    <p><strong>Vos pronostics sont enregistrés.</strong></p>
                     <a href="{% url 'pronos:cup' cup_id %}">Retour</a>
                 {% else %}
                     <h1>Matchs à pronostiquer :</h1>
                     {% if no_available_prono %}
-                        <p>Pas de pronostique éditable.</p>
+                        <p>Pas de pronostic éditable.</p>
                     {% else %}
                         <form action="." method="post">
                             {% csrf_token %}
