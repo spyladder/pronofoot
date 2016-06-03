@@ -156,9 +156,10 @@ section ul
     margin: 0;
 }
 
-div.v_scrolling
+div.scrolling
 {
     height: 460px;
+    max-width: 100%;
     overflow: auto;
     margin-left: auto; 
     margin-right: auto;
