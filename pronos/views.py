@@ -68,12 +68,17 @@ def stats(request, cup_id):
         cup=cup_id,
         match_date__lt=datetime.date.today()
     )
+    cup_name = Cups.objects.get(pk=cup_id)
+    context = {
+        'cup_id': cup_id,
+        'cup_name': cup_name,
+    }
     if not match_list:
-        raise Http404("Pas de match disponible.")
-    cup_name = match_list[0].cup
+        return render(request, 'pronos/stats.html', context)
 
     nb_goals = 0
     nb_draws = 0
+    nb_matches_won_by_favorite = 0
     scores_dict = {}
     for match in match_list:
         score_a = match.getFullScore('a')
@@ -93,6 +98,11 @@ def stats(request, cup_id):
         if score_a == score_b:
             nb_draws += 1
 
+        rank_a = TeamsByCup.objects.filter(team=match.team_a, cup=match.cup)[0].fifa_rank
+        rank_b = TeamsByCup.objects.filter(team=match.team_b, cup=match.cup)[0].fifa_rank
+        if rank_a < rank_b and score_a > score_b or rank_a > rank_b and score_a < score_b:
+            nb_matches_won_by_favorite += 1
+
     nb_matches_total = len(match_list)
     goals_per_match = nb_goals / nb_matches_total
     draw_percent = 100 * nb_draws / nb_matches_total
@@ -102,27 +112,6 @@ def stats(request, cup_id):
     for score in score_list_sorted:
         score_list_percent.append((score[0], score[1], 100 * score[1] / nb_matches_total))
 
-    match_list = Matches.objects.raw(
-        ' SELECT *\
-            FROM Matches\
-            INNER JOIN Teams AS TA ON team_A = TA.id\
-            INNER JOIN Teams AS TB ON team_B = TB.id\
-            INNER JOIN Teams_by_cup AS TBCA ON team_A = TBCA.team\
-            INNER JOIN Teams_by_cup AS TBCB ON team_B = TBCB.team\
-            WHERE Matches.cup = %s\
-                AND\
-                (TBCA.fifa_rank < TBCB.fifa_rank\
-                AND\
-                score_A + IFNULL(score_prolong_A, 0) > score_B + IFNULL(score_prolong_B, 0)\
-                OR\
-                TBCA.fifa_rank > TBCB.fifa_rank\
-                AND\
-                score_A + IFNULL(score_prolong_A, 0) < score_B + IFNULL(score_prolong_B, 0)\
-                );',
-        [cup_id])
-    nb_matches_won_by_favorite = 0
-    for match in match_list:
-        nb_matches_won_by_favorite += 1
     matches_won_by_favorite_percent = 100 * nb_matches_won_by_favorite / nb_matches_total
     matches_lost_by_favorite_percent = 100 - matches_won_by_favorite_percent - draw_percent
 
