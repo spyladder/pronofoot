@@ -35,6 +35,26 @@ header h1
     margin: 0 0 0 10px;
 }
 
+header a:link, header a:visited {
+    color: #556B2F;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header a:hover, header a:active {
+    color: #778D4F;
+    font-weight: bold;
+}
+
+section ul
+{
+    list-style-type: none;
+    margin: 0 0 15px 0;
+    padding: 0;
+}
+
 /* Body */
 body
 {
