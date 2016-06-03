@@ -120,6 +120,12 @@ section ul
     padding: 0;
 }
 
+form label
+{
+    width: 110px;
+    display:inline-block;
+}
+
 #cup_menu
 {
     background-color: #556B2F;
