@@ -76,9 +76,10 @@ body
 section
 {
     background-color: #EEE8AA;
+    min-height:400px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     padding: 5px;
 }
