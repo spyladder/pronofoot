@@ -11,6 +11,7 @@ from django.forms import formset_factory
 from pronos.models import *
 from pronos.forms import *
 import datetime
+import json
 
 U_COLORS = {
     'light': ['#8bf', '#8fb', '#b8f', '#f8b', '#bf8', '#fb8'],
@@ -471,6 +472,7 @@ def rankings(request, cup_id):
 
     return render(request, 'pronos/rankings.html', context)
 
+
 def getRankingsLists(cup_id, phase, filter='include'):
     general_rank_list = []
     good_1N2_rank_list = []
@@ -551,12 +553,75 @@ def getRankingsLists(cup_id, phase, filter='include'):
 
     return (general_rank_list, good_1N2_rank_list, good_score_rank_list)
 
+
 def graph(request, cup_id):
     cup_name = Cups.objects.get(pk=cup_id)
+
     context = {
         'cup_id': cup_id,
         'cup_name': cup_name,
     }
 
+    pronos = Pronostics.objects.filter(
+        match__cup=cup_id,
+        match__match_date__lt=datetime.date.today()
+    ).order_by('match__match_date', 'user')
+
+    if len(pronos) == 0:
+        return render(request, 'pronos/graph.html', context)
+
+    date_list = []
+    date_index = -1
+    users_scores_dict = {}
+
+    for prono in pronos:
+        match_date = str(prono.match.match_date)
+        user_name = prono.user.username
+
+        if not user_name in users_scores_dict.keys():
+            users_scores_dict[user_name] = [0]
+
+        if len(date_list) == 0 or date_list[date_index] != match_date:
+            date_list.append(match_date)
+            date_index += 1
+
+        if len(users_scores_dict[user_name]) == date_index:
+            users_scores_dict[user_name].append(users_scores_dict[user_name][-1])
+
+        users_scores_dict[user_name][date_index] += prono.getScore()
+
+    series = []
+    for user_name, score_list in users_scores_dict.items():
+        series.append({'name': user_name, 'data': score_list})
+
+    chart_dict = {
+        'title': {
+            'text': "Graphique de l'évolution des scores des participants",
+            'x': -20
+        },
+        'xAxis': {
+            'categories': date_list
+        },
+        'yAxis': {
+            'title': {
+                'text': 'Points'
+            }
+        },
+        'tooltip': {
+            'valueSuffix': 'pts'
+        },
+        'legend': {
+            'layout': 'vertical',
+            'align': 'right',
+            'verticalAlign': 'middle',
+            'borderWidth': 0
+        },
+        'series': series
+    }
+
+    chart_js = ("$(function () {$('#container').highcharts(" +
+                json.dumps(chart_dict) +
+                ");});")
+    context['chart_js'] = chart_js
 
     return render(request, 'pronos/graph.html', context)
