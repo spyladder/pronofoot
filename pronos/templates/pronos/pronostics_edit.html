@@ -21,6 +21,9 @@
                     {% if no_available_prono %}
                         <p>Pas de pronostic éditable.</p>
                     {% else %}
+                        {% if error %}
+                            <p><font color="#FF0000">Vous n'avez pas rempli tous les champs.</font></p>
+                        {% endif %}
                         <form action="." method="post">
                             {% csrf_token %}
                             {{ formset.management_form }}

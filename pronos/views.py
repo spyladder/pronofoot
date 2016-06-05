@@ -262,8 +262,7 @@ def pronosEdit(request, cup_id):
     if request.method == 'POST':
         PronosticFormSet = formset_factory(PronosticForm)
         formset = PronosticFormSet(request.POST)
-        # TODO gérer les erreurs
-        print(formset.errors)
+
         if formset.is_valid():
             for form in formset:
                 prono_id = form.cleaned_data['prono']
@@ -293,7 +292,8 @@ def pronosEdit(request, cup_id):
                 'created': True,
             }
         else:
-            context = createPronosticForm(cup_id, cup_name, user)
+            context = createPronosticForm(cup_id, cup_name, user, formset)
+            context['error'] = True
         
     else: # GET
         context = createPronosticForm(cup_id, cup_name, user)
@@ -301,7 +301,7 @@ def pronosEdit(request, cup_id):
     return render(request, 'pronos/pronostics_edit.html', context)
 
 
-def createPronosticForm(cup_id, cup_name, user):
+def createPronosticForm(cup_id, cup_name, user, previous_formset=None):
     no_available_prono = False
     match_list = Matches.objects.filter(
         cup=cup_id,
@@ -332,7 +332,18 @@ def createPronosticForm(cup_id, cup_name, user):
                     ('b', match.team_b),
                     ('a', match.team_a),
                 )
-
+        # If errors occured in previous form, set again last user values
+        if previous_formset:
+            if 'score_a' in previous_formset[i].cleaned_data.keys():
+                form.initial['score_a'] = previous_formset[i].cleaned_data['score_a']
+            if 'score_b' in previous_formset[i].cleaned_data.keys():
+                form.initial['score_b'] = previous_formset[i].cleaned_data['score_b']
+            if 'winner' in previous_formset[i].cleaned_data.keys():
+                if previous_formset[i].cleaned_data['winner'] == 'b':
+                    winner_initial = (
+                        ('b', match.team_b),
+                        ('a', match.team_a),
+                    )
 
         form.fields['score_a'].label = match.team_a
         form.fields['score_b'].label = match.team_b
@@ -344,6 +355,7 @@ def createPronosticForm(cup_id, cup_name, user):
         'cup_name': cup_name,
         'no_available_prono': no_available_prono,
         'formset': formset,
+        'error': False,
     }
 
 
