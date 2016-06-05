@@ -491,14 +491,20 @@ def getRankingsLists(cup_id, phase, filter='include'):
     good_score_rank_list = []
     pronos = None
     if not phase:
-        pronos = Pronostics.objects.filter(match__cup=cup_id).order_by('user')
+        pronos = Pronostics.objects.filter(
+            match__cup=cup_id,
+            match__match_date__lt=datetime.date.today()
+        ).order_by('user')
     elif filter == 'include':
         pronos = Pronostics.objects.filter(
-            match__cup=cup_id, match__phase=phase
+            match__cup=cup_id,
+            match__phase=phase,
+            match__match_date__lt=datetime.date.today()
         ).order_by('user')
     else:
         pronos = Pronostics.objects.filter(
-            match__cup=cup_id
+            match__cup=cup_id,
+            match__match_date__lt=datetime.date.today()
         ).exclude(
             match__phase=phase
         ).order_by('user')
