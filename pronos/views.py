@@ -68,9 +68,7 @@ def cup(request, cup_id):
 
 def cupTeams(request, cup_id):
     team_list = TeamsByCup.objects.filter(cup=cup_id).order_by('fifa_rank')
-    if not team_list:
-        raise Http404("Pas d'équipe disponible.")
-    cup_name = team_list[0].cup
+    cup_name = Cups.objects.get(pk=cup_id)
     context = {
         'cup_id': cup_id,
         'cup_name': cup_name,
@@ -81,15 +79,14 @@ def cupTeams(request, cup_id):
 
 def matches(request, cup_id):
     match_list = Matches.objects.filter(cup=cup_id).order_by('match_date')
-    if not match_list:
-        raise Http404("Pas de match disponible.")
-    cup_name = match_list[0].cup
-    phases = getFormatedMatchList(match_list)
+    cup_name = Cups.objects.get(pk=cup_id)
     context = {
         'cup_id': cup_id,
         'cup_name': cup_name,
-        'phases': phases,
     }
+    if match_list:
+        phases = getFormatedMatchList(match_list)
+        context['phases'] = phases
     return render(request, 'pronos/matches.html', context)
 
 
@@ -165,14 +162,13 @@ def team(request, cup_id, team_id):
     team = get_object_or_404(Teams, pk=team_id)
     team_name = team.team_name
 
+    cup_name = Cups.objects.get(pk=cup_id)
+
     match_list = Matches.objects.filter(
         Q(cup=cup_id),
         Q(team_a=team_id) | Q(team_b=team_id),
         Q(match_date__lt=datetime.date.today())
     ).order_by('match_date')
-
-    if not match_list:
-        raise Http404("Pas de match disponible.")
 
     nb_goals_plus = 0
     nb_goals_minus = 0
@@ -185,8 +181,13 @@ def team(request, cup_id, team_id):
             nb_goals_minus += match.getFullScore('a')
     goals_diff = nb_goals_plus - nb_goals_minus
 
+    match_list = Matches.objects.filter(
+        Q(cup=cup_id),
+        Q(team_a=team_id) | Q(team_b=team_id)
+    ).order_by('match_date')
+
     phases = getFormatedMatchList(match_list)
-    cup_name = match_list[0].cup
+
     context = {
         'cup_id': cup_id,
         'cup_name': cup_name,
