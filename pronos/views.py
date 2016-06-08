@@ -13,9 +13,38 @@ from pronos.forms import *
 import datetime
 import json
 
+COLORS = {
+    'skyblue':     {'light': '#87CEEB', 'dark': '#65ACC9'},
+    'yellowgreen': {'light': '#9ACD32', 'dark': '#78AB10'},
+    'tomato':      {'light': '#FF6347', 'dark': '#DD4125'},
+    'pink':        {'light': '#FFC0CB', 'dark': '#DDA0A9'},
+    'orange':      {'light': '#FFA500', 'dark': '#DD8300'},
+    'violet':      {'light': '#EE82EE', 'dark': '#CC60CC'},
+    'turquoise':   {'light': '#40E0D0', 'dark': '#20C0B0'},
+    'gold':        {'light': '#FFD700', 'dark': '#DDB500'},
+    'lightsalmon': {'light': '#FFA07A', 'dark': '#DD8058'},
+    'lavender':    {'light': '#E6E6FA', 'dark': '#C4C4D8'},
+    'thistle':     {'light': '#D8BFD8', 'dark': '#B69DB6'},
+    'lime':        {'light': '#00FF00', 'dark': '#00DD00'},
+    'darkkhaki':   {'light': '#BDB76B', 'dark': '#9B9549'},
+    'springgreen': {'light': '#00FF7F', 'dark': '#00DD5D'},
+    'peachpuff':   {'light': '#FFDAB9', 'dark': '#DDB897'},
+}
 U_COLORS = {
-    'light': ['#8bf', '#8fb', '#b8f', '#f8b', '#bf8', '#fb8'],
-    'dark':  ['#69d', '#6d9', '#96d', '#d69', '#9d6', '#d96']
+    'light': [
+        COLORS['skyblue']['light'], COLORS['yellowgreen']['light'], COLORS['tomato']['light'], 
+        COLORS['pink']['light'], COLORS['orange']['light'], COLORS['violet']['light'], 
+        COLORS['turquoise']['light'], COLORS['gold']['light'], COLORS['lightsalmon']['light'], 
+        COLORS['lavender']['light'], COLORS['thistle']['light'], COLORS['lime']['light'], 
+        COLORS['darkkhaki']['light'], COLORS['springgreen']['light'], COLORS['peachpuff']['light'], 
+    ],
+    'dark': [
+        COLORS['skyblue']['dark'], COLORS['yellowgreen']['dark'], COLORS['tomato']['dark'], 
+        COLORS['pink']['dark'], COLORS['orange']['dark'], COLORS['violet']['dark'], 
+        COLORS['turquoise']['dark'], COLORS['gold']['dark'], COLORS['lightsalmon']['dark'], 
+        COLORS['lavender']['dark'], COLORS['thistle']['dark'], COLORS['lime']['dark'], 
+        COLORS['darkkhaki']['dark'], COLORS['springgreen']['dark'], COLORS['peachpuff']['dark'], 
+    ]
 }
 GREY = { 'light': '#eee', 'dark': '#ccc'}
 
