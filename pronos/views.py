@@ -317,6 +317,8 @@ def createPronosticForm(cup_id, cup_name, user, previous_formset=None):
         form = formset[i]
         # We write in the form the id of the match linked to this prono
         form.initial = {'match': match.id}
+        form.initial['score_a'] = 0
+        form.initial['score_b'] = 0
         pronos = Pronostics.objects.filter(user=user, match=match)
         winner_initial = (
             ('a', match.team_a),
