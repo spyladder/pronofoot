@@ -1,7 +1,9 @@
 <div id="main_title">
     <div id="logo">
         {% load staticfiles %}
-        <img src="{% static 'pronos/logo.png' %}" alt="Logo" />
+        <a href="{% url 'pronos:index' %}">
+            <img src="{% static 'pronos/logo.png' %}" alt="Logo" />
+        </a>
         <h1>Pronofoot</h1>    
     </div>
 </div>
