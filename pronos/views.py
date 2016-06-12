@@ -481,7 +481,7 @@ def pronostics(request, cup_id):
 
     context['user_list'] = user_list
     # Used to align columns of the fixed titles line with others
-    context['nb_cols'] = len(user_list) * 3 + 3 
+    context['nb_cols'] = len(user_list) * 3 + 3
     context['match_list'] = match_list
 
     return render(request, 'pronos/pronostics.html', context)

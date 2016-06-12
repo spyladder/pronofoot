@@ -204,10 +204,22 @@ div.scrolling
     margin-bottom: 5px;
 }
 
+div.v_scrolling
+{
+    height: 420px;
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-left: auto; 
+    margin-right: auto;
+    margin-bottom: 5px;
+}
+
 div.h_scrolling
 {
-    max-width: 100%;
-    overflow: auto;
+    max-width: 95%;
+    overflow-x: auto;
+    overflow-y: hidden;
     margin-left: auto; 
     margin-right: auto;
 }
