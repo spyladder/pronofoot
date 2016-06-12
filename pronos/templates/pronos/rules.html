@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'pronos/style.css' %}" />
+        <title>Pronofoot</title>
+    </head>
+    <body>
+        <div id="main_wrapper">
+            <header>
+                {% include "pronos/header.html" %}
+            </header>
+            <section>
+                <h1>Règlement :</h1>
+                <div id="rules">
+                    <h2>Comment jouer :</h2>
+                    <p>
+                        Inscrivez-vous en cliquant sur "Inscription" en haut à droite du site.<br/>
+                        Pour vous connecter, cliquez sur "Connection" en haut à droite du site.
+                    </p>
+                    <p>
+                        Ensuite vous devez sélectionner une compétition proposée sur la page d'accueil.<br/>
+                        Vous aurez accès à un certains nombre d'informations sur la compétition ainsi que sur le concours de pronostics.<br/>
+                        Dans la rubrique "Pronostiquer", vous pourrez pronostiquer les matchs à venir.<br/>
+                        Attention, les matchs du jour, même s'ils ne sont pas encore passés, ne sont plus pronosticables.<br/>
+                        Vous pouvez modifier vos pronostics tant que les matchs sont accessibles dans la liste des pronostics.
+                    </p>
+                    <h2>Le calcul des points :</h2>
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>Phase de poules</th>
+                            <th>Phase finale</th>
+                        </tr>
+                        <tr>
+                            <td>Bon prono 1N2 (bon gagnant ou nul trouvé)</td>
+                            <td>5 pts</td>
+                            <td>10 pts</td>
+                        </tr>
+                        <tr>
+                            <td>Le score est bon pour les 2 équipes</td>
+                            <td>11 pts</td>
+                            <td>11 pts</td>
+                        </tr>
+                        <tr>
+                            <td>Le score est bon pour une seule équipe</td>
+                            <td>3 pts</td>
+                            <td>3 pts</td>
+                        </tr>
+                    </table>
+                    <h2>Prolongations et tirs aux buts :</h2>
+                    <p>Pour la phase finale, le score d'un match comprend les prolongations s'il y en a.</p>
+                    <p>En phase finale, si vous pronostiquez un nul, vous devez indiquer le gagnant
+                        des tirs aux buts avec la petite liste déroulante prévue à cet effet.
+                    </p>
+                    <p>Cette liste déroulante ne sert à rien pour les matchs de poules.</p>
+                    <p>
+                        <h2>Exemples de calculs de points :</h2>
+                        Pour un match dont le score réel est 2-1 en match de poule.<br/>
+                        Si vous avez pronostiqué :<br/>
+                        <ul>
+                            <li>0-2, vous avez 0 pt</li>
+                            <li>1-0, vous avez 5 pts (bon 1N2 mais pas de bon score)</li>
+                            <li>2-2, vous avez 3 pts (bon score pour première équipe)</li>
+                            <li>2-0, vous avez 8 pts (bon 1N2 et un bon score)</li>
+                            <li>2-1, vous avez 16 pts (bon 1N2 et les 2 bons scores)</li>
+                        </ul>
+                    </p>
+                </div>
+            </section>
+        </div>
+    </body>
+</html>

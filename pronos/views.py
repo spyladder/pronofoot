@@ -675,3 +675,7 @@ def graph(request, cup_id):
     context['chart_js'] = chart_js
 
     return render(request, 'pronos/graph.html', context)
+
+
+def rules(request):
+    return render(request, 'pronos/rules.html', {})

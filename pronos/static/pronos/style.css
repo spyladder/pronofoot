@@ -79,6 +79,11 @@ body
     padding: 0;
 }
 
+#rules
+{
+    text-align: left;
+}
+
 section
 {
     background-color: #EEE8AA;
