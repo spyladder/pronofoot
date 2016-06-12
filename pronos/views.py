@@ -402,7 +402,7 @@ def pronostics(request, cup_id):
     match_list = []
     matches = Matches.objects.filter(
         cup=cup_id,
-        match_date__lt=datetime.date.today()
+        match_date__lte=datetime.date.today()
     ).order_by('match_date')
     pronos = Pronostics.objects.filter(match__cup=cup_id).order_by('user')
 
