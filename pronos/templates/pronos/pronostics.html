@@ -16,7 +16,6 @@
                 <h1>Tableau récapitulatif des pronostics :</h1>
                 <div class="h_scrolling">
                     <table>
-                        <thead>
                             <tr>
                                 <th width="100px">
                                     <div style="min-width:100px">Date</div>
@@ -29,69 +28,69 @@
                                         <div style="min-width:90px; max-width:90px;">{{ user.name|truncatechars:9 }}</div>
                                     </td>
                                 {% endfor %}
-                                <td width="5px" bgcolor="#EEE8AA"></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan={{ nb_cols }} style="padding: 0; margin: 0;">
-                                    <div class="v_scrolling">
-                                        <table id="pronos">
-                                            {% for match in match_list %}
-                                                <tr>
-                                                    <td width="98px" rowspan="2">
-                                                        <div style="min-width:98px; max-width:98px;">
-                                                            {{ match.date }}
+                    </table>
+                    <table>
+                        <tr>
+                            <td style="padding: 0; margin: 0; background-color:#EEE8AA">
+                                <div class="v_scrolling">
+                                    <table id="pronos">
+                                        {% for match in match_list %}
+                                            <tr>
+                                                <td width="98px" rowspan="2">
+                                                    <div style="min-width:98px; max-width:98px;">
+                                                        {{ match.date }}
+                                                    </div>
+                                                </td>
+                                                <td width="94px">
+                                                    <div style="min-width:94px; max-width:94px;">
+                                                        {{ match.team_a }}
+                                                    </div>
+                                                </td>
+                                                <td width="10px">
+                                                    <div style="min-width:10px; max-width:10px;">
+                                                        {{ match.score_a }}
+                                                    </div>
+                                                </td>
+                                                <td width="10px">
+                                                    <div style="min-width:10px; max-width:10px;">
+                                                        {{ match.win_a }}
+                                                    </div>
+                                                </td>
+                                                {% for prono in match.pronos_a %}
+                                                    <td width="22px" bgcolor={{ prono.color }}>
+                                                        <div style="min-width:22px; max-width:22px;">
+                                                            {{ prono.score }}
                                                         </div>
                                                     </td>
-                                                    <td width="94px">
-                                                        <div style="min-width:94px; max-width:94px;">
-                                                            {{ match.team_a }}
+                                                    <td width="22px" bgcolor={{ prono.color }}>
+                                                        <div style="min-width:22px; max-width:22px;">
+                                                            {{ prono.win }}
                                                         </div>
                                                     </td>
-                                                    <td width="10px">
-                                                        <div style="min-width:10px; max-width:10px;">
-                                                            {{ match.score_a }}
+                                                    <td width="24px" rowspan="2" bgcolor={{ prono.color }}>
+                                                        <div style="min-width:24px; max-width:24px;">
+                                                            {{ prono.points }}
                                                         </div>
                                                     </td>
-                                                    <td width="10px">
-                                                        <div style="min-width:10px; max-width:10px;">
-                                                            {{ match.win_a }}
-                                                        </div>
-                                                    </td>
-                                                    {% for prono in match.pronos_a %}
-                                                        <td width="22px" bgcolor={{ prono.color }}>
-                                                            <div style="min-width:22px; max-width:22px;">
-                                                                {{ prono.score }}
-                                                            </div>
-                                                        </td>
-                                                        <td width="22px" bgcolor={{ prono.color }}>
-                                                            <div style="min-width:22px; max-width:22px;">
-                                                                {{ prono.win }}
-                                                            </div>
-                                                        </td>
-                                                        <td width="24px" rowspan="2" bgcolor={{ prono.color }}>
-                                                            <div style="min-width:24px; max-width:24px;">
-                                                                {{ prono.points }}
-                                                            </div>
-                                                        </td>
-                                                    {% endfor %}
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ match.team_b }}</td>
-                                                    <td>{{ match.score_b }}</td>
-                                                    <td>{{ match.win_b }}</td>
-                                                    {% for prono in match.pronos_b %}
-                                                        <td bgcolor={{ prono.color }}>{{ prono.score }}</td>
-                                                        <td bgcolor={{ prono.color }}>{{ prono.win }}</td>
-                                                    {% endfor %}
-                                                </tr>
-                                            {% endfor %}
-                                        </table>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                                                {% endfor %}
+                                                <td bgcolor="#EEE8AA"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{ match.team_b }}</td>
+                                                <td>{{ match.score_b }}</td>
+                                                <td>{{ match.win_b }}</td>
+                                                {% for prono in match.pronos_b %}
+                                                    <td bgcolor={{ prono.color }}>{{ prono.score }}</td>
+                                                    <td bgcolor={{ prono.color }}>{{ prono.win }}</td>
+                                                {% endfor %}
+                                                <td bgcolor="#EEE8AA"></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </section>
