@@ -658,7 +658,8 @@ def graph(request, cup_id):
             }
         },
         'tooltip': {
-            'valueSuffix': 'pts'
+            'valueSuffix': 'pts',
+            'shared': 'true'
         },
         'legend': {
             'layout': 'vertical',
