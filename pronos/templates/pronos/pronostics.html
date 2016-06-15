@@ -2,9 +2,47 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <link rel="stylesheet" type="text/css"
+            href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+        <link rel="stylesheet" type="text/css"
+            href="https://cdn.datatables.net/fixedcolumns/3.2.2/css/fixedColumns.dataTables.min.css">
         {% load staticfiles %}
         <link rel="stylesheet" href="{% static 'pronos/style.css' %}" />
         <title>Pronofoot</title>
+        <style type="text/css" class="init">    
+            th, td {
+                white-space: nowrap;
+            }
+        </style>
+        <script type="text/javascript"
+            src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+        <script type="text/javascript" language="javascript"
+            src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" language="javascript"
+            src="https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js">
+        </script>
+        <script type="text/javascript" class="init">
+            $(document).ready(function() {
+                var table = $('#pronotable').DataTable( {
+                    scrollY: "60vh",
+                    scrollX: true,
+                    sScrollX: "100%",
+                    scrollCollapse: true,
+                    paging: false,
+                    bInfo: false,
+                    oLanguage: {
+                        "sSearch": "Rechercher :"
+                    },
+                    fixedColumns:   {
+                        leftColumns: 2
+                    },
+                    columnDefs: [
+                        { targets: [0], bSortable: true},
+                        { targets: '_all', bSortable: false }
+                    ]
+                } );
+            } );
+        </script>
     </head>
     <body>
         <div id="main_wrapper">
@@ -14,85 +52,88 @@
             {% include "pronos/menu.html" %}
             <section>
                 <h1>Tableau récapitulatif des pronostics :</h1>
-                <div class="h_scrolling">
-                    <table>
-                            <tr>
-                                <th width="100px">
-                                    <div style="min-width:100px">Date</div>
-                                </th>
-                                <th width="135px" min-width="135px">
-                                    <div style="min-width:135px">Match</div>
-                                </th>
-                                {% for user in user_list %}
-                                    <td width="90px;" colspan="3" bgcolor={{ user.color }}>
-                                        <div style="min-width:90px; max-width:90px;">{{ user.name|truncatechars:9 }}</div>
-                                    </td>
-                                {% endfor %}
-                            </tr>
-                    </table>
-                    <table>
+
+                <table id="pronotable" class="pronos" cellspacing="0" width="100%">
+                    <thead>
                         <tr>
-                            <td style="padding: 0; margin: 0; background-color:#EEE8AA">
-                                <div class="v_scrolling">
-                                    <table id="pronos">
-                                        {% for match in match_list %}
-                                            <tr>
-                                                <td width="98px" rowspan="2">
-                                                    <div style="min-width:98px; max-width:98px;">
-                                                        {{ match.date }}
-                                                    </div>
-                                                </td>
-                                                <td width="94px">
-                                                    <div style="min-width:94px; max-width:94px;">
-                                                        {{ match.team_a }}
-                                                    </div>
-                                                </td>
-                                                <td width="10px">
-                                                    <div style="min-width:10px; max-width:10px;">
-                                                        {{ match.score_a }}
-                                                    </div>
-                                                </td>
-                                                <td width="10px">
-                                                    <div style="min-width:10px; max-width:10px;">
-                                                        {{ match.win_a }}
-                                                    </div>
-                                                </td>
-                                                {% for prono in match.pronos_a %}
-                                                    <td width="22px" bgcolor={{ prono.color }}>
-                                                        <div style="min-width:22px; max-width:22px;">
-                                                            {{ prono.score }}
-                                                        </div>
-                                                    </td>
-                                                    <td width="22px" bgcolor={{ prono.color }}>
-                                                        <div style="min-width:22px; max-width:22px;">
-                                                            {{ prono.win }}
-                                                        </div>
-                                                    </td>
-                                                    <td width="24px" rowspan="2" bgcolor={{ prono.color }}>
-                                                        <div style="min-width:24px; max-width:24px;">
-                                                            {{ prono.points }}
-                                                        </div>
-                                                    </td>
-                                                {% endfor %}
-                                                <td bgcolor="#EEE8AA"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>{{ match.team_b }}</td>
-                                                <td>{{ match.score_b }}</td>
-                                                <td>{{ match.win_b }}</td>
-                                                {% for prono in match.pronos_b %}
-                                                    <td bgcolor={{ prono.color }}>{{ prono.score }}</td>
-                                                    <td bgcolor={{ prono.color }}>{{ prono.win }}</td>
-                                                {% endfor %}
-                                                <td bgcolor="#EEE8AA"></td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-                                </div>
-                            </td>
+                            <th>Date</th>
+                            <th>Match</th>
+                            {% for user in user_list %}
+                                <th>
+                                    {{ user.name|truncatechars:9 }}
+                                </th>
+                            {% endfor %}
                         </tr>
-                    </table>
-                </div>
+                    </thead>
+                    <tbody>
+                        {% for match in match_list %}
+                        <tr>
+                            <td>{{ match.date }}</td>
+                            <td><table class="intern">
+                                <tr style="background: rgba(0, 0, 0, 0);">
+                                    <td class="transparent">
+                                        {% if match.win == 'a' %}
+                                            <strong>{{ match.team_a }}</strong>
+                                        {% else %}
+                                            {{ match.team_a }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="transparent">
+                                        {% if match.win == 'a' %}
+                                            <strong>{{ match.score_a }}</strong>
+                                        {% else %}
+                                            {{ match.score_a }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr style="background: rgba(0, 0, 0, 0);">
+                                    <td class="transparent">
+                                        {% if match.win == 'b' %}
+                                            <strong>{{ match.team_b }}</strong>
+                                        {% else %}
+                                            {{ match.team_b }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="transparent">
+                                        {% if match.win == 'b' %}
+                                            <strong>{{ match.score_b }}</strong>
+                                        {% else %}
+                                            {{ match.score_b }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                </table>
+                            </td>
+                            {% for prono in match.pronos %}
+                            <td bgcolor={{ prono.color }}><table class="intern">
+                                    <tr style="background: rgba(0, 0, 0, 0);">
+                                        <td class="transparent">
+                                            {% if prono.win == 'a' %}
+                                                <strong>{{ prono.score_a }}</strong>
+                                            {% else %}
+                                                {{ prono.score_a }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="transparent" rowspan="2">
+                                            {{ prono.points }}
+                                        </td>
+                                    </tr>
+                                    <tr style="background: rgba(0, 0, 0, 0);">
+                                        <td class="transparent">
+                                            {% if prono.win == 'b' %}
+                                                <strong>{{ prono.score_b }}</strong>
+                                            {% else %}
+                                                {{ prono.score_b }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </section>
         </div>
     </body>
