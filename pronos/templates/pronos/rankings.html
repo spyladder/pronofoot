@@ -42,7 +42,7 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ user }}</td>
                                 <td>{{ points }}</td>
-                                <td>{{ percent }}</td>
+                                <td>{{ percent|floatformat:2 }}</td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -91,7 +91,7 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ user }}</td>
                                 <td>{{ points }}</td>
-                                <td>{{ percent }}</td>
+                                <td>{{ percent|floatformat:2 }}</td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -140,7 +140,7 @@
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ user }}</td>
                                 <td>{{ points }}</td>
-                                <td>{{ percent }}</td>
+                                <td>{{ percent|floatformat:2 }}</td>
                             </tr>
                         {% endfor %}
                     </table>

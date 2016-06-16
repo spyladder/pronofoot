@@ -22,19 +22,19 @@
                         </tr>
                         <tr>
                             <td>Nombre de buts moyen par match :</td>
-                            <td>{{ goals_per_match }}</td>
+                            <td>{{ goals_per_match|floatformat:2 }}</td>
                         </tr>
                         <tr>
                             <td>Matchs nuls :</td>
-                            <td>{{ draw_percent }}%</td>
+                            <td>{{ draw_percent|floatformat:2 }}%</td>
                         </tr>
                         <tr>
                             <td>Matchs remportés par l'équipe la mieux classée :</td>
-                            <td>{{ matches_won_by_favorite_percent }}%</td>
+                            <td>{{ matches_won_by_favorite_percent|floatformat:2 }}%</td>
                         </tr>
                         <tr>
                             <td>Matchs perdus par l'équipe la mieux classée :</td>
-                            <td>{{ matches_lost_by_favorite_percent }}%</td>
+                            <td>{{ matches_lost_by_favorite_percent|floatformat:2 }}%</td>
                         </tr>
                     </table>
                     <table>
@@ -47,7 +47,7 @@
                             <tr>
                                 <td align="center">{{ score }}</td>
                                 <td align="center">{{ occurs }}</td>
-                                <td align="center">{{ percent }}%</td>
+                                <td align="center">{{ percent|floatformat:2 }}%</td>
                             </tr>
                         {% endfor %}
                     </table>
