@@ -636,6 +636,7 @@ def graph(request, cup_id):
     for user_name, score_list in users_scores_dict.items():
         series.append({'name': user_name, 'data': score_list})
 
+    series.sort(key=lambda dic: dic['name'].lower())
     chart_dict = {
         'title': {
             'text': "Graphique de l'évolution des scores des participants",
