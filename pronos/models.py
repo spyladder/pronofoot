@@ -71,6 +71,9 @@ class Matches(models.Model):
                 else:
                     return 'b'
 
+    def isFinalPhaseMatch(self):
+        return self.phase != 'Phase de poules'
+
     def __str__(self):
         spa, spb = 0, 0
         if self.score_prolong_a != None:
@@ -121,12 +124,13 @@ class Pronostics(models.Model):
 
     def isGood1N2(self):
         match_winner = self.match.getWinnerTeam()
+        is_final_phase = self.match.isFinalPhaseMatch()
         ended_with_penalties = self.match.score_tab_a != None
-        if ended_with_penalties and match_winner == self.tab_winner:
-            return True
-        elif(self.score_a > self.score_b and match_winner == 'a' or
+        if(ended_with_penalties and match_winner == self.tab_winner or
+             self.score_a > self.score_b and match_winner == 'a' or
              self.score_a < self.score_b and match_winner == 'b' or
-             self.score_a == self.score_b and match_winner == 'd'):
+             self.score_a == self.score_b and match_winner == 'd' or
+             is_final_phase and self.score_a == self.score_b and match_winner == self.tab_winner):
 
             return True
         else:
