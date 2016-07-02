@@ -158,8 +158,14 @@ class Pronostics(models.Model):
             'group': 5, # Points if good winner found for a group match,
             'final': 10, # Points if good winner found for a match in final phase
         }
-        POINTS_1_SCORE = 3 # Points if the number of goals of only one team is good
-        POINTS_2_SCORES = 11 # Points if the number of goals of both teams is good
+        POINTS_1_SCORE = {
+            'group': 3, # Points if the number of goals of only one team is good for a group match
+            'final': 5, # Points if the number of goals of only one team is good for a match in final phase
+        }
+        POINTS_2_SCORES = {
+            'group': 11, # Points if the number of goals of both teams is good for a group match
+            'final': 17, # Points if the number of goals of both teams is good for a match in final phase
+        }
 
         if self.match.match_date < datetime.date.today():
             score = 0
@@ -171,9 +177,9 @@ class Pronostics(models.Model):
                 score += POINTS_1N2[match_phase]
 
             if self.is2ScoresGood():
-                score += POINTS_2_SCORES
+                score += POINTS_2_SCORES[match_phase]
             elif self.is1ScoreGood():
-                score += POINTS_1_SCORE
+                score += POINTS_1_SCORE[match_phase]
 
             return score
 
