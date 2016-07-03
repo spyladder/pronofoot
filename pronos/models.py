@@ -122,19 +122,23 @@ class Pronostics(models.Model):
     score_prolong_b = models.SmallIntegerField(blank=True, null=True)
     tab_winner = models.CharField(max_length=1, blank=True, null=True)
 
+    def getWinnerTeam(self):
+        if self.score_a > self.score_b:
+            return 'a'
+        elif self.score_a < self.score_b:
+            return 'b'
+        else:
+            is_final_phase = self.match.isFinalPhaseMatch()
+            # If it's a group match, the result is a draw
+            if not is_final_phase:
+                return 'd' # Draw
+            else: # If it's a final phase match, the winner is the tab winner
+                return self.tab_winner
+
     def isGood1N2(self):
         match_winner = self.match.getWinnerTeam()
-        is_final_phase = self.match.isFinalPhaseMatch()
-        ended_with_penalties = self.match.score_tab_a != None
-        if(ended_with_penalties and match_winner == self.tab_winner or
-             self.score_a > self.score_b and match_winner == 'a' or
-             self.score_a < self.score_b and match_winner == 'b' or
-             self.score_a == self.score_b and match_winner == 'd' or
-             is_final_phase and self.score_a == self.score_b and match_winner == self.tab_winner):
-
-            return True
-        else:
-            return False
+        prono_winner = self.getWinnerTeam()
+        return match_winner == prono_winner
 
     def is2ScoresGood(self):
         match_full_score_a = self.match.getFullScore('a')
